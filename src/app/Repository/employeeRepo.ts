@@ -11,6 +11,17 @@ export class EmployeeRespository{
         const employeeRepo = getConnection().getRepository(Employee);
         return employeeRepo.save(employeeDetails);
     }
+
+    public async updateEmployeeDetails(employeeId: string, employeeDetails: any) {
+        const employeeRepo = getConnection().getRepository(Employee);
+        const updateEmployeeDetails = await employeeRepo.update({ id: employeeId, deletedAt: null }, {
+            name: employeeDetails.name ? employeeDetails.name : undefined,
+        });
+        return updateEmployeeDetails;
     }
 
-// }
+    public async getdeptEmployees() {
+        const employeeRepo = getConnection().getRepository(Employee);
+        return employeeRepo.find({ relations: ['department']});
+    }
+    }

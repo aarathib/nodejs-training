@@ -10,17 +10,20 @@ class EmployeeController extends AbstractController {
     this.initializeRoutes();
   }
   protected initializeRoutes() {
-    this.router.get(`${this.path}`, this.employeeResponse);
-  this.router.post(`${this.path}`,
-    // validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body),
-    // this.asyncRouteHandler(this.createEmployee)
-    this.createEmployee);}
-private createEmployee = async (
-  request: RequestWithUser,
-  response: Response,
-  next: NextFunction
-) => {
+    this.router.get(`${this.path}`, this.getEmployee);
+    this.router.post(`${this.path}`, this.createEmployee);
+
+    // this.router.get(`${this.path}`,
+    // // validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body),
+    // // this.asyncRouteHandler(this.createEmployee)
+    // this.createEmployee);
+  }
+
+
+
+private createEmployee = async (request: RequestWithUser, response: Response, next: NextFunction) => {
   try {
+    console.log(request.body);
     const data = await this.employeeService.createEmployee(request.body);
     response.send(
       this.fmt.formatResponse(data, Date.now() - request.startTime, "OK")
@@ -29,7 +32,18 @@ private createEmployee = async (
     next(err);
   }
 }
-  private employeeResponse = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  // private createEmployee = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  //   try {
+  //     console.log(request.body);
+  //     const data: any = await this.employeeService.getAllEmployees();
+  //     response.status(200);
+  //     response.send(this.fmt.formatResponse(data, Date.now() - request.startTime, "OK", 1));
+  //   } catch (error) {
+  //     return next(error);
+  //   }
+  // }
+
+  private getEmployee = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
       const data: any = await this.employeeService.getAllEmployees();
       response.status(200);
@@ -39,7 +53,18 @@ private createEmployee = async (
     }
   }
 
+  // private createEmployee = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  //   try {
+  //     const data: any = await this.employeeService.getAllEmployees();
+  //     response.status(200);
+  //     response.send(this.fmt.formatResponse(data, Date.now() - request.startTime, "OK", 1));
+  //   } catch (error) {
+  //     return next(error);
+  //   }
+  // }
+
 }
+
 
 
 export default EmployeeController;
