@@ -49,9 +49,10 @@ export class EmployeeService{
         try {
             const newEmployee = plainToClass(Employee, {
                 name: employeeDetails.name,
-                // username: employeeDetails.username,
-                // age: employeeDetails.age,
+                username: employeeDetails.username,
+                experience: employeeDetails.experience,
                 departmentId: employeeDetails.departmentId,
+                password: employeeDetails.password
                 // isActive: true,
             });
             const save = await this.employeeRepo.saveEmployeeDetails(newEmployee);
@@ -60,6 +61,26 @@ export class EmployeeService{
             //throw new HttpException(400, "Failed to create employee",);
         }
     }
+
+
+    public async updateEmployees(employeeId: string, employeeDetails: any) {
+        try {
+            const newEmployee = plainToClass(Employee, {
+                name: employeeDetails.name,
+                username: employeeDetails.username,
+                experience: employeeDetails.experience,
+                password: employeeDetails.password,
+                departmentId: employeeDetails.departmentId,
+                // isActive: true,
+            });
+            const save = await this.employeeRepo.updateEmployeeDetails(employeeId, newEmployee);
+            return save;
+        } catch (err) {
+            //throw new HttpException(400, "Failed to create employee",);
+        }
+    }
+
+
     }
     
     
