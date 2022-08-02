@@ -80,6 +80,23 @@ export class EmployeeService{
         }
     }
 
+    public async deleteEmployee(employeeId: string) {
+        try {
+            // const newEmployee = plainToClass(Employee, {
+            //     name: employeeDetails.name,
+            //     username: employeeDetails.username,
+            //     experience: employeeDetails.experience,
+            //     password: employeeDetails.password,
+            //     departmentId: employeeDetails.departmentId,
+            //     // isActive: true,
+            // });
+            const save = await this.employeeRepo.softDeleteEmployeeById(employeeId);
+            return save;
+        } catch (err) {
+            //throw new HttpException(400, "Failed to create employee",);
+        }
+    }
+
 
     }
     

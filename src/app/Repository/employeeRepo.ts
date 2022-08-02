@@ -24,4 +24,11 @@ export class EmployeeRespository{
         const employeeRepo = getConnection().getRepository(Employee);
         return employeeRepo.find({ relations: ['department']});
     }
+
+    public async softDeleteEmployeeById(id: string) {
+        const employeeRepo = getConnection().getRepository(Employee);
+        return employeeRepo.softDelete({
+            id
+        });
+    }
     }

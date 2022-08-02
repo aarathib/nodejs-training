@@ -15,6 +15,7 @@ class EmployeeController extends AbstractController {
     this.router.get(`${this.path}`, this.getEmployee);
     // this.router.post(`${this.path}`, this.createEmployee);
     this.router.put(`${this.path}/:id`, this.updateEmployee);
+    this.router.delete(`${this.path}/:id`, this.deleteEmployee);
 
     this.router.post(`${this.path}`,
     validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body), 
@@ -54,6 +55,16 @@ private createEmployee = async (request: RequestWithUser, response: Response, ne
     } catch (error) {
       return next(error);
     }
+  }
+
+    private deleteEmployee = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+      try {
+        const data: any = await this.employeeService.deleteEmployee(request.params.id);
+        response.status(200);
+        response.send(this.fmt.formatResponse(data, Date.now() - request.startTime, "OK", 1));
+      } catch (error) {
+        return next(error);
+      }
   }
 
 }
