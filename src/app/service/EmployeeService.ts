@@ -88,10 +88,10 @@ export class EmployeeService{
 
     public async updateEmployees(employeeId: string, employeeDetails: CreateEmployeeDto) {
         try {
-        
+          console.log(employeeDetails)
           const empDetails = await this.employeeRepo.getEmployeebyId(employeeId)
           const newAddress = plainToClass(Address, {
-            id: empDetails.address.id,
+            id: empDetails.addressId,
             addr1: employeeDetails.address.addr1,
             addr2: employeeDetails.address.addr2,
             city: employeeDetails.address.city,
@@ -116,6 +116,7 @@ export class EmployeeService{
                 address: newAddress
                 // isActive: true,
             });
+            console.log(newEmployee)
             const save = await this.employeeRepo.updateEmployeeDetails(newEmployee);
             console.log(save)
             return save;
@@ -134,8 +135,8 @@ export class EmployeeService{
             //     departmentId: employeeDetails.departmentId,
             //     // isActive: true,
             // });
-
-            const save = await this.employeeRepo.softDeleteEmployeeById(employeeId);
+          const empDetails = await this.employeeRepo.getEmployeebyId(employeeId)
+            const save = await this.employeeRepo.softDeleteEmployeeById(empDetails);
             return save;
         } catch (err) {
             //throw new HttpException(400, "Failed to create employee",);

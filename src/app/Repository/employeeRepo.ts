@@ -1,4 +1,4 @@
-import { getConnection } from "typeorm";
+import { DeepPartial, getConnection } from "typeorm";
 import { CreateEmployeeDto } from "../dto/CreateEmployeeDto";
 import { Employee } from "../entities/Employee";
 
@@ -24,7 +24,7 @@ export class EmployeeRespository{
         return employeeRepo.save(employeeDetails);
     }
 
-    public async updateEmployeeDetails(employeeDetails: CreateEmployeeDto) {
+    public async updateEmployeeDetails(employeeDetails: DeepPartial<Employee>) {
         console.log(employeeDetails);
         const employeeRepo = getConnection().getRepository(Employee);
         return employeeRepo.save(employeeDetails);
@@ -40,11 +40,9 @@ export class EmployeeRespository{
         return employeeRepo.find({ relations: ['department']});
     }
 
-    public async softDeleteEmployeeById(id: string) {
+    public async softDeleteEmployeeById(empDetails: Employee) {
         const employeeRepo = getConnection().getRepository(Employee);
-        return employeeRepo.softDelete({
-            id
-        });
+        return employeeRepo.softRemove(empDetails);
     }
 
     public async getEmployeeByName(username: string) {
