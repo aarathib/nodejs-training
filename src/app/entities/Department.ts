@@ -12,7 +12,7 @@ import { Employee } from "./Employee";
     //     public empno: number;
 
 
-    //     @OneToMany(() => Employee, (employee) => employee.department)
-    // @JoinColumn()
-    // public employee: Employee[];
+        @OneToMany(() => Employee, (employee) => employee.department)
+        @JoinColumn()
+        public employee: Employee[];
 }

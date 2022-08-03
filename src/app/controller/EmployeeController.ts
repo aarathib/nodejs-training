@@ -6,6 +6,7 @@ import { EmployeeService } from "../service/EmployeeService";
 import validationMiddleware from "../middleware/validationMiddleware";
 import { CreateEmployeeDto } from "../dto/CreateEmployeeDto";
 import authorize from "../middleware/authorize";
+import { CreateUUIDDto } from "../dto/CreateUUIDDto";
 
 class EmployeeController extends AbstractController {
   constructor(private employeeService: EmployeeService) {
@@ -13,13 +14,24 @@ class EmployeeController extends AbstractController {
     this.initializeRoutes();
   }
   protected initializeRoutes() {
-    this.router.get(`${this.path}`, authorize(['admin', 'superAdmin']), this.getEmployee);
+    this.router.get(`${this.path}`, 
+    authorize(['admin', 'superAdmin']), 
+    this.getEmployee);
     // this.router.post(`${this.path}`, this.createEmployee);
-    this.router.put(`${this.path}/:id`, this.updateEmployee);
-    this.router.delete(`${this.path}/:id`, this.deleteEmployee);
+
+    this.router.put(`${this.path}/:id`, 
+    authorize(['admin', 'superAdmin']),
+    validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body), 
+    validationMiddleware(CreateUUIDDto, APP_CONSTANTS.params), this.updateEmployee);
+
+    this.router.delete(`${this.path}/:id`, 
+    authorize(['admin', 'superAdmin']),
+    validationMiddleware(CreateUUIDDto, APP_CONSTANTS.params),
+    authorize(['admin', 'superAdmin']), this.deleteEmployee);
 
     this.router.post(`${this.path}`,
-    validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body), 
+    authorize(['admin', 'superAdmin']),
+    validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body),
     // this.asyncRouteHandler(this.createEmployee)
     this.createEmployee);
     this.router.post(`${this.path}/login`, this.login);
@@ -52,9 +64,11 @@ private createEmployee = async (request: RequestWithUser, response: Response, ne
   private updateEmployee = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
       const data: any = await this.employeeService.updateEmployees(request.params.id, request.body);
+      console.log(request.body)
       response.status(200);
       response.send(this.fmt.formatResponse(data, Date.now() - request.startTime, "OK", 1));
     } catch (error) {
+      console.log(error)
       return next(error);
     }
   }
@@ -73,15 +87,19 @@ private createEmployee = async (request: RequestWithUser, response: Response, ne
     request: RequestWithUser,
     response: Response,
     next: NextFunction
-  ) => {
-    const loginData = request.body;
+  ) => {try{const loginData = request.body;
+    console.log("In controller")
     const loginDetail = await this.employeeService.employeeLogin(
-      loginData.name.toLowerCase(),
+      loginData.name,
       loginData.password
     );
     response.send(
       this.fmt.formatResponse(loginDetail, Date.now() - request.startTime, "OK")
-    );
+    );}
+    catch(error){
+      console.log(error);
+      return next(error);
+    }
   };
 
 }

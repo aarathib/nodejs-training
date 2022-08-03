@@ -1,4 +1,5 @@
 import { getConnection } from "typeorm";
+import { CreateEmployeeDto } from "../dto/CreateEmployeeDto";
 import { Employee } from "../entities/Employee";
 
 export class EmployeeRespository{
@@ -9,9 +10,13 @@ export class EmployeeRespository{
 
     async getEmployeebyId(employeeId: string){
         const employeeRepo = getConnection().getRepository(Employee);
-        const employee =  employeeRepo.findOne(employeeId);
+        try {
+            const employee =  await employeeRepo.findOne({where:{id:employeeId}, relations:['department','address']});
+            return employee;
 
-
+        } catch (err) {
+                throw err
+        }
     }
 
     public async saveEmployeeDetails(employeeDetails: Employee) {
@@ -19,12 +24,15 @@ export class EmployeeRespository{
         return employeeRepo.save(employeeDetails);
     }
 
-    public async updateEmployeeDetails(employeeId: string, employeeDetails: any) {
+    public async updateEmployeeDetails(employeeDetails: CreateEmployeeDto) {
+        console.log(employeeDetails);
         const employeeRepo = getConnection().getRepository(Employee);
-        const updateEmployeeDetails = await employeeRepo.update({ id: employeeId, deletedAt: null }, {
-            name: employeeDetails.name ? employeeDetails.name : undefined,
-        });
-        return updateEmployeeDetails;
+        return employeeRepo.save(employeeDetails);
+
+        // const updateEmployeeDetails = await employeeRepo.update({ id: employeeId, deletedAt: null }, {
+        //     name: employeeDetails.name ? employeeDetails.name : undefined,
+        // });
+        // return updateEmployeeDetails;
     }
 
     public async getdeptEmployees() {

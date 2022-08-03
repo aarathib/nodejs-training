@@ -1,4 +1,6 @@
 import { plainToClass } from "class-transformer";
+import { CreateEmployeeDto } from "../dto/CreateEmployeeDto";
+import Address from "../entities/Address";
 import { Employee } from "../entities/Employee";
 import HttpException from "../exception/HttpException";
 import IncorrectUsernameOrPasswordException from "../exception/IncorrectUsernameOrPasswordException";
@@ -51,14 +53,31 @@ export class EmployeeService{
 
     public async createEmployee(employeeDetails: any) {
         try {
+          const newAddress = plainToClass(Address, {
+            addr1: employeeDetails.address.addr1,
+            addr2: employeeDetails.address.addr2,
+            city: employeeDetails.address.city,
+            state: employeeDetails.address.state,
+            country: employeeDetails.address.country,
+            pincode: employeeDetails.address.pincode
+            // status: employeeDetails.status,
+            // departmentId: employeeDetails.departmentId,
+            // addrId: employeeDetails.addrId
+            // isActive: true,
+        });
             const newEmployee = plainToClass(Employee, {
                 name: employeeDetails.name,
                 username: employeeDetails.username,
+                password: employeeDetails.password? await bcrypt.hash(employeeDetails.password, 10):'',
+                joindate: employeeDetails.joindate,
                 experience: employeeDetails.experience,
+                role: employeeDetails.role,
+                status: employeeDetails.status,
                 departmentId: employeeDetails.departmentId,
-                password: employeeDetails.password? await bcrypt.hash(employeeDetails.password, 10):''
+                address: newAddress
                 // isActive: true,
             });
+
             const save = await this.employeeRepo.saveEmployeeDetails(newEmployee);
             return save;
         } catch (err) {
@@ -67,17 +86,38 @@ export class EmployeeService{
     }
 
 
-    public async updateEmployees(employeeId: string, employeeDetails: any) {
+    public async updateEmployees(employeeId: string, employeeDetails: CreateEmployeeDto) {
         try {
+        
+          const empDetails = await this.employeeRepo.getEmployeebyId(employeeId)
+          const newAddress = plainToClass(Address, {
+            id: empDetails.address.id,
+            addr1: employeeDetails.address.addr1,
+            addr2: employeeDetails.address.addr2,
+            city: employeeDetails.address.city,
+            state: employeeDetails.address.state,
+            country: employeeDetails.address.country,
+            pincode: employeeDetails.address.pincode
+            // status: employeeDetails.status,
+            // departmentId: employeeDetails.departmentId,
+            // addrId: employeeDetails.addrId
+            // isActive: true,
+        });
             const newEmployee = plainToClass(Employee, {
+                id: employeeId,
                 name: employeeDetails.name,
                 username: employeeDetails.username,
                 experience: employeeDetails.experience,
                 password: employeeDetails.password,
                 departmentId: employeeDetails.departmentId,
+                joindate: employeeDetails.departmentId,
+                status: employeeDetails.departmentId,
+                role: employeeDetails.departmentId,
+                address: newAddress
                 // isActive: true,
             });
-            const save = await this.employeeRepo.updateEmployeeDetails(employeeId, newEmployee);
+            const save = await this.employeeRepo.updateEmployeeDetails(newEmployee);
+            console.log(save)
             return save;
         } catch (err) {
             //throw new HttpException(400, "Failed to create employee",);
@@ -109,6 +149,7 @@ export class EmployeeService{
         const employeeDetails = await this.employeeRepo.getEmployeeByName(
           name
         );
+        console.log("in service")
         if (!employeeDetails) {
           throw new UserNotAuthorizedException();
         }
@@ -117,7 +158,7 @@ export class EmployeeService{
           let payload = {
             "custom:id": employeeDetails.id,
             "custom:name": employeeDetails.name,
-            "role": "admin"
+            "role": employeeDetails.role
           };
           const token = this.generateAuthTokens(payload);
 

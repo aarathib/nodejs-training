@@ -1,5 +1,7 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
+import Address from "./Address";
+// import Address from "./Address";
 import Department from "./Department";
 
 @Entity("employee")
@@ -11,15 +13,23 @@ import Department from "./Department";
         @Column({ nullable: false })
         public username: string;
         @Column({ nullable: false })
+        public password: string;
+        @Column({ nullable: false })
+        public joindate: string;
+        @Column({ nullable: false })
         public experience: number;
         @Column({ nullable: false })
-        public password: string;
-        @Column({ nullable: true })
         public role: string;
+        @Column({ nullable: false })
+        public status: string;
 
         @ManyToOne(() => Department, { cascade: true })
-    @JoinColumn()
-    public department: Department;
+        @JoinColumn()
+        public department: Department;
         @Column({ nullable: false })
         public departmentId: string;
+
+        @OneToOne(() => Address, { cascade: true })
+        @JoinColumn()
+        public address: Address;
 }
