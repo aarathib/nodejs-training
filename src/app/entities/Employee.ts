@@ -14,6 +14,8 @@ import Department from "./Department";
         public experience: number;
         @Column({ nullable: false })
         public password: string;
+        @Column({ nullable: true })
+        public role: string;
 
         @ManyToOne(() => Department, { cascade: true })
     @JoinColumn()

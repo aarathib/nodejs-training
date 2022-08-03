@@ -12,3 +12,4 @@ class EntityNotFoundException extends HttpException {
 }
 
 export default EntityNotFoundException;
+

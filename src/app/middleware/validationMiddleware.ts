@@ -13,13 +13,17 @@ import { ErrorCodes } from "../util/errorCode";
  */
 function validationMiddleware<T>(type: any, parameter: string, skipMissingProperties = false): express.RequestHandler {
   return (req, res, next) => {
+    let reqstruct;
+    if(parameter==='body')
+      reqstruct=req.body
     const requestBody = plainToClass(type, req.body);
     validate(
       requestBody, { skipMissingProperties, forbidUnknownValues: true, whitelist: true })
       .then((errors: ValidationError[]) => {
         if (errors.length > 0) {
           const errorDetail = ErrorCodes.VALIDATION_ERROR;
-          next(errors);
+          next(new HttpException(400, errorDetail.MESSAGE, errorDetail.CODE, errors))
+          // next(errors);
         } else {
             req.body = requestBody;
           next();

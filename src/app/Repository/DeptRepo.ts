@@ -12,6 +12,20 @@ export class DeptRepository{
         const deptRepo = getConnection().getRepository(Department);
         return deptRepo.save(deptDetails);
     }
+
+    public async updateDeptDetails(deptId: string, deptDetails: any) {
+        const deptRepo = getConnection().getRepository(Department);
+        const updateDeptDetails = await deptRepo.update({ id: deptId, deletedAt: null }, {
+            name: deptDetails.name ? deptDetails.name : undefined,
+        });
+        return updateDeptDetails;
+    }
+
+    public async softdeleteDeptDetails(id: string) {
+        const deptRepo = getConnection().getRepository(Department);
+        return deptRepo.softDelete({id});
+    }
+
     }
 
 // }

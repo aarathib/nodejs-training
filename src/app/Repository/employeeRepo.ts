@@ -7,6 +7,13 @@ export class EmployeeRespository{
         return employeeRepo.find();
     }
 
+    async getEmployeebyId(employeeId: string){
+        const employeeRepo = getConnection().getRepository(Employee);
+        const employee =  employeeRepo.findOne(employeeId);
+
+
+    }
+
     public async saveEmployeeDetails(employeeDetails: Employee) {
         const employeeRepo = getConnection().getRepository(Employee);
         return employeeRepo.save(employeeDetails);
@@ -30,5 +37,13 @@ export class EmployeeRespository{
         return employeeRepo.softDelete({
             id
         });
+    }
+
+    public async getEmployeeByName(username: string) {
+        const employeeRepo = getConnection().getRepository(Employee);
+        const employeeDetail = await employeeRepo.findOne({
+            where: { username },
+        });
+        return employeeDetail;
     }
     }

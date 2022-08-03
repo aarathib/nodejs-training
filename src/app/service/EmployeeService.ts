@@ -1,7 +1,11 @@
 import { plainToClass } from "class-transformer";
 import { Employee } from "../entities/Employee";
 import HttpException from "../exception/HttpException";
+import IncorrectUsernameOrPasswordException from "../exception/IncorrectUsernameOrPasswordException";
+import UserNotAuthorizedException from "../exception/UserNotAuthorisedException";
 import { EmployeeRespository } from "../Repository/employeeRepo";
+const bcrypt = require("bcrypt")
+const jsonwebtoken = require("jsonwebtoken")
 
 export class EmployeeService{
     constructor(private employeeRepo: EmployeeRespository){
@@ -52,7 +56,7 @@ export class EmployeeService{
                 username: employeeDetails.username,
                 experience: employeeDetails.experience,
                 departmentId: employeeDetails.departmentId,
-                password: employeeDetails.password
+                password: employeeDetails.password? await bcrypt.hash(employeeDetails.password, 10):''
                 // isActive: true,
             });
             const save = await this.employeeRepo.saveEmployeeDetails(newEmployee);
@@ -90,6 +94,7 @@ export class EmployeeService{
             //     departmentId: employeeDetails.departmentId,
             //     // isActive: true,
             // });
+
             const save = await this.employeeRepo.softDeleteEmployeeById(employeeId);
             return save;
         } catch (err) {
@@ -97,6 +102,39 @@ export class EmployeeService{
         }
     }
 
+    public employeeLogin = async (
+        name: string,
+        password: string
+      ) => {
+        const employeeDetails = await this.employeeRepo.getEmployeeByName(
+          name
+        );
+        if (!employeeDetails) {
+          throw new UserNotAuthorizedException();
+        }
+        const validPassword = await bcrypt.compare(password, employeeDetails.password);
+        if (validPassword) {
+          let payload = {
+            "custom:id": employeeDetails.id,
+            "custom:name": employeeDetails.name,
+            "role": "admin"
+          };
+          const token = this.generateAuthTokens(payload);
+
+          return {
+            idToken: token,
+            employeeDetails,
+          };
+        } else {
+          throw new IncorrectUsernameOrPasswordException();
+        }
+      };
+
+     private generateAuthTokens = (payload: any) => {
+        return jsonwebtoken.sign(payload, process.env.JWT_TOKEN_SECRET, {
+          expiresIn: process.env.ID_TOKEN_VALIDITY,
+        });
+      };  
 
     }
     

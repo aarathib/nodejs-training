@@ -13,9 +13,11 @@ class DeptController extends AbstractController {
   protected initializeRoutes() {
     this.router.get(`${this.path}`, this.getDept);
     this.router.post(`${this.path}`,
-    // validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body),
-    // this.asyncRouteHandler(this.createEmployee)
+    // // validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body),
+    // // this.asyncRouteHandler(this.createEmployee)
     this.createDept);
+    this.router.put(`${this.path}/:id`, this.updateDept);
+    this.router.delete(`${this.path}/:id`, this.deleteDept);
 }
 
 
@@ -32,6 +34,28 @@ class DeptController extends AbstractController {
 private createDept = async (request: RequestWithUser, response: Response, next: NextFunction) => {
   try {
     const data = await this.deptService.createDept(request.body);
+    response.send(
+      this.fmt.formatResponse(data, Date.now() - request.startTime, "OK")
+    );
+  } catch (err) {
+    next(err);
+  }
+}
+
+private updateDept = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  try {
+    const data = await this.deptService.updateDept(request.params.id,request.body);
+    response.send(
+      this.fmt.formatResponse(data, Date.now() - request.startTime, "OK")
+    );
+  } catch (err) {
+    next(err);
+  }
+}
+
+private deleteDept = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  try {
+    const data = await this.deptService.deleteDept(request.params.id);
     response.send(
       this.fmt.formatResponse(data, Date.now() - request.startTime, "OK")
     );

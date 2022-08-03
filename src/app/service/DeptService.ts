@@ -6,6 +6,7 @@ import { DeptRepository } from "../Repository/DeptRepo";
 import { EmployeeRespository } from "../Repository/employeeRepo";
 
 export class DeptService{
+    DeptRepository: any;
     constructor(private deptRepo: DeptRepository){
 
     }
@@ -63,6 +64,41 @@ export class DeptService{
             //throw new HttpException(400, "Failed to create employee",);
         }
     }
+
+    public async updateDept(deptId:string, deptDetails: any) {
+        try {
+            const newDept = plainToClass(Department, {
+                name: deptDetails.name
+                // username: deptDetails.username,
+                // age: deptDetails.age,
+                // departmentId: deptDetails.departmentId,
+                // password: deptDetails.password
+                // // isActive: true,
+            });
+            const save = await this.deptRepo.updateDeptDetails(deptId, newDept);
+            return save;
+        } catch (err) {
+            //throw new HttpException(400, "Failed to create employee",);
+        }
+    }
+
+    public async deleteDept(deptId:string) {
+        try {
+            // const newDept = plainToClass(Department, {
+            //     name: deptDetails.name
+            //     username: deptDetails.username,
+            //     age: deptDetails.age,
+            //     departmentId: deptDetails.departmentId,
+            //     password: deptDetails.password
+            //     // isActive: true,
+            // });
+            const save = await this.deptRepo.softdeleteDeptDetails(deptId);
+            return save;
+        } catch (err) {
+            //throw new HttpException(400, "Failed to create employee",);
+        }
+    }
+
     }
     
     
