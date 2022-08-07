@@ -2,7 +2,6 @@
 
 
 import express from "express";
-// import UserNotAuthorizedException from "../exception/UserNotAuthorizedException";
 import RequestWithUser from "../util/rest/request";
 import jsonwebtoken from "jsonwebtoken";
 import APP_CONSTANTS from "../constants";
@@ -21,7 +20,7 @@ const authorize = (permittedRoles: string[]) => {
       const data: any = jsonwebtoken.decode(token);
       const decodedData = JSON.parse(JSON.stringify(data));
       if(!(permittedRoles.includes(decodedData.role))){
-        throw new UserNotAuthorizedException();
+        // throw new UserNotAuthorizedException();
       }
       return next();
     } catch (error) {

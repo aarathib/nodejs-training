@@ -8,9 +8,6 @@ import { Employee } from "./Employee";
         public id: string;
         @Column({ nullable: false })
         public name: string;
-    //     @Column({ nullable: true })
-    //     public empno: number;
-
 
         @OneToMany(() => Employee, (employee) => employee.department)
         @JoinColumn()

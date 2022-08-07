@@ -17,6 +17,19 @@ export const ErrorCodes: { [key: string]: CustomError } = {
     VALIDATION_ERROR: {
         CODE: "VALIDATION_ERROR",
         MESSAGE: "Validation failed error",
+    },
+    INCORRECT_USERNAME_OR_PASSWORD: {
+        // STATUS: 403,
+        CODE: "INCORRECT_USERNAME_OR_PASSWORD",
+        MESSAGE: "Incorrect Username or Password",
+    },
+    FAILED_TO_UPDATE: {
+        CODE: "FAILED_TO_UPDATE",
+        MESSAGE: "Failed to update employee",
+    },
+    FAILED_TO_DELETE: {
+        CODE: "FAILED_TO_DELETE",
+        MESSAGE: "Failed to delete employee",
     }
 };
 
@@ -24,6 +37,7 @@ export const ErrorCodes: { [key: string]: CustomError } = {
  * Interface to describe custom errors
  */
 export interface CustomError {
+    // STATUS: 403
     CODE: string;
     MESSAGE: string;
 }

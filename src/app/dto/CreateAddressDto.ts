@@ -21,10 +21,4 @@ export class CreateAddressDTO {
     @IsString()
     public pincode: string;
 
-    // @ValidateNested({ each:true})
-    // @Type(()=> CreateAddressDTO)
-    // address: CreateAddressDTO
-    // Validating nested objects 
-//  @ValidateNested({ each: true })
-//  @Type(() => <Your nested DTO>)
 }

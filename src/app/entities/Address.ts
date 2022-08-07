@@ -19,13 +19,4 @@ import { Employee } from "./Employee";
         @Column({ nullable: false })
         public pincode: string;
 
-    //     @OneToMany(() => Employee, (employee) => employee.department)
-    // @JoinColumn()
-    // public employee: Employee[];
-
-    // @ManyToOne(() => Employee, { cascade: true })
-    // @JoinColumn()
-    // public employee: Employee;
-    //     @Column({ nullable: false })
-    //     public departmentId: string;
 }
