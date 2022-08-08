@@ -12,11 +12,18 @@ class EmployeeController extends AbstractController {
   constructor(private employeeService: EmployeeService) {
     super(`${APP_CONSTANTS.apiPrefix}/employee`);
     this.initializeRoutes();
+    enum Role { Admin, SuperAdmin };
   }
   protected initializeRoutes() {
     this.router.get(`${this.path}`,
-      //authorize(['admin', 'superAdmin']), 
+      authorize(['admin', 'superAdmin']), 
       this.getEmployee);
+
+    this.router.get(`${this.path}/:id`,
+      authorize(['admin', 'superAdmin']),
+      validationMiddleware(CreateUUIDDto, APP_CONSTANTS.params),
+      this.getEmployeeById);
+
 
     this.router.put(`${this.path}/:id`,
       authorize(['admin', 'superAdmin']),
@@ -60,6 +67,17 @@ class EmployeeController extends AbstractController {
       return next(error);
     }
   }
+
+  private getEmployeeById = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+    try {
+      const data: any = await this.employeeService.getEmployeeById(request.params.id);
+      response.status(200);
+      response.send(this.fmt.formatResponse(data, Date.now() - request.startTime, "OK", 1));
+    } catch (error) {
+      return next(error);
+    }
+  }
+
 
   private updateEmployee = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {

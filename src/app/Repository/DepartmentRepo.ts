@@ -13,9 +13,9 @@ export class DeptRepository{
         return departmentRepo.save(departmentDetails);
     }
 
-    public async updateDepartmentDetails(depatmentId: string, departmentDetails: CreateDepartmentDto) {
+    public async updateDepartmentDetails(departmentId: string, departmentDetails: CreateDepartmentDto) {
         const departmentRepo = getConnection().getRepository(Department);
-        const updateDeptDetails = await departmentRepo.update({ id: depatmentId, deletedAt: null }, {
+        const updateDeptDetails = await departmentRepo.update({ id: departmentId, deletedAt: null }, {
             name: departmentDetails.name ? departmentDetails.name : undefined,
         });
         return updateDeptDetails;

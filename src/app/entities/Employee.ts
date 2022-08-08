@@ -1,7 +1,6 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from "typeorm";
 import { AbstractEntity } from "./AbstractEntity";
 import Address from "./Address";
-// import Address from "./Address";
 import Department from "./Department";
 
 @Entity("employee")
@@ -16,7 +15,9 @@ import Department from "./Department";
         public password: string;
         @Column({ nullable: false })
         public joindate: string;
-        @Column({ nullable: false })
+        // @Column({ nullable: false })
+        // public experience: number;
+        @Column({ nullable: false, type: "float" })
         public experience: number;
         @Column({ nullable: false })
         public role: string;

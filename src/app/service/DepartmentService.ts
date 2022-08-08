@@ -3,6 +3,7 @@ import { CreateDepartmentDto } from "../dto/CreateDepartmentDto";
 import Department from "../entities/Department";
 import HttpException from "../exception/HttpException";
 import { DeptRepository } from "../Repository/DepartmentRepo";
+import { ErrorCodes } from "../util/errorCode";
 
 export class DepartmentService{
     DepartmentRepository: any;
@@ -22,7 +23,7 @@ export class DepartmentService{
             const save = await this.deptRepo.saveDepartmentDetails(newDept);
             return save;
         } catch (err) {
-            //throw new HttpException(400, "Failed to create employee",);
+            throw new HttpException(400, ErrorCodes.FAILED_TO_CREATE.CODE, ErrorCodes.FAILED_TO_CREATE.MESSAGE);
         }
     }
 
@@ -34,7 +35,7 @@ export class DepartmentService{
             const save = await this.deptRepo.updateDepartmentDetails(deptId, newDept);
             return save;
         } catch (err) {
-            //throw new HttpException(400, "Failed to create employee",);
+            throw new HttpException(400, ErrorCodes.FAILED_TO_UPDATE.CODE, ErrorCodes.FAILED_TO_UPDATE.MESSAGE);
         }
     }
 
@@ -43,7 +44,7 @@ export class DepartmentService{
             const save = await this.deptRepo.softdeleteDepartmentDetails(deptId);
             return save;
         } catch (err) {
-            //throw new HttpException(400, "Failed to create employee",);
+            throw new HttpException(400, ErrorCodes.FAILED_TO_DELETE.CODE, ErrorCodes.FAILED_TO_DELETE.MESSAGE);
         }
     }
 

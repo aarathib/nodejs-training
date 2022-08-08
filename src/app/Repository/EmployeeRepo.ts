@@ -3,9 +3,6 @@ import { Employee } from "../entities/Employee";
 
 export class EmployeeRepository{
     
-    // constructor(){
-    //     const employeeRepo = getConnection().getRepository(Employee);
-    // }
     async getAllEmployees(){
          const employeeRepo = getConnection().getRepository(Employee);
         return employeeRepo.find();

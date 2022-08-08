@@ -27,6 +27,10 @@ export const ErrorCodes: { [key: string]: CustomError } = {
         CODE: "FAILED_TO_UPDATE",
         MESSAGE: "Failed to update employee",
     },
+    FAILED_TO_CREATE: {
+        CODE: "FAILED_TO_CREATE",
+        MESSAGE: "Failed to create employee",
+    },
     FAILED_TO_DELETE: {
         CODE: "FAILED_TO_DELETE",
         MESSAGE: "Failed to delete employee",
