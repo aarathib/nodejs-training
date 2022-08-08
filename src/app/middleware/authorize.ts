@@ -18,8 +18,9 @@ const authorize = (permittedRoles: string[]) => {
       const token = getTokenFromRequestHeader(req);
       jsonwebtoken.verify(token, process.env.JWT_TOKEN_SECRET);
       const data: any = jsonwebtoken.decode(token);
-      if(!(permittedRoles.includes(data.role))){
-        // throw new UserNotAuthorizedException();
+      const decodedData = JSON.parse(JSON.stringify(data));
+      if(!(permittedRoles.includes(decodedData.role))){
+        throw new UserNotAuthorizedException();
       }
       return next();
     } catch (error) {

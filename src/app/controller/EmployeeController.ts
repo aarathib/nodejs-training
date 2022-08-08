@@ -7,37 +7,37 @@ import validationMiddleware from "../middleware/validationMiddleware";
 import { CreateEmployeeDto } from "../dto/CreateEmployeeDto";
 import authorize from "../middleware/authorize";
 import { CreateUUIDDto } from "../dto/CreateUUIDDto";
+import { Role } from "../enums/Role";
 
 class EmployeeController extends AbstractController {
   constructor(private employeeService: EmployeeService) {
     super(`${APP_CONSTANTS.apiPrefix}/employee`);
     this.initializeRoutes();
-    enum Role { Admin, SuperAdmin };
   }
   protected initializeRoutes() {
     this.router.get(`${this.path}`,
-      authorize(['admin', 'superAdmin']), 
+      authorize(['admin', "superAdmin"]),
       this.getEmployee);
 
     this.router.get(`${this.path}/:id`,
-      authorize(['admin', 'superAdmin']),
+      authorize([Role.admin, Role.superAdmin]),
       validationMiddleware(CreateUUIDDto, APP_CONSTANTS.params),
       this.getEmployeeById);
 
 
     this.router.put(`${this.path}/:id`,
-      authorize(['admin', 'superAdmin']),
+      authorize([Role.admin, Role.superAdmin]),
       validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body),
       validationMiddleware(CreateUUIDDto, APP_CONSTANTS.params),
       this.updateEmployee);
 
     this.router.delete(`${this.path}/:id`,
-      authorize(['admin', 'superAdmin']),
+      authorize([Role.admin, Role.superAdmin]),
       validationMiddleware(CreateUUIDDto, APP_CONSTANTS.params),
       this.deleteEmployee);
 
     this.router.post(`${this.path}`,
-      authorize(['admin', 'superAdmin']),
+      authorize([Role.admin, Role.superAdmin]),
       validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body),
       // this.asyncRouteHandler(this.createEmployee)
       this.createEmployee);

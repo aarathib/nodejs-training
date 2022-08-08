@@ -10,13 +10,9 @@ export class EmployeeRepository{
 
     async getEmployeebyId(employeeId: string){
         const employeeRepo = getConnection().getRepository(Employee);
-        try {
             const employee =  await employeeRepo.findOne({where:{id:employeeId}, relations:['department','address']});
             return employee;
-
-        } catch (error) {
-                throw error;
-        }
+        
     }
 
     public async saveEmployeeDetails(employeeDetails: Employee) {

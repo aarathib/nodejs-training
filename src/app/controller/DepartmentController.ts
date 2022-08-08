@@ -6,6 +6,8 @@ import { DepartmentService } from "../service/DepartmentService";
 import authorize from "../middleware/authorize";
 import validationMiddleware from "../middleware/validationMiddleware";
 import { CreateDepartmentDto } from "../dto/CreateDepartmentDto";
+import { CreateUUIDDto } from "../dto/CreateUUIDDto";
+import { Role } from "../enums/Role";
 
 class DepartmentController extends AbstractController {
   constructor(private deptService: DepartmentService) {
@@ -14,24 +16,24 @@ class DepartmentController extends AbstractController {
   }
   protected initializeRoutes() {
     this.router.get(`${this.path}`,
-      authorize(['admin', 'superadmin']),
+    authorize([Role.admin, Role.superAdmin]),
       this.getDepartment);
 
     this.router.post(`${this.path}`,
-      authorize(['admin', 'superadmin']),
+    authorize([Role.admin, Role.superAdmin]),
       validationMiddleware(CreateDepartmentDto, APP_CONSTANTS.body),
       // this.asyncRouteHandler(this.createEmployee)
       this.createDepartment);
 
     this.router.put(`${this.path}/:id`,
-      authorize(['admin', 'superadmin']),
+    authorize([Role.admin, Role.superAdmin]),
       validationMiddleware(CreateDepartmentDto, APP_CONSTANTS.body),
-      validationMiddleware(CreateDepartmentDto, APP_CONSTANTS.params),
+      validationMiddleware(CreateUUIDDto, APP_CONSTANTS.params),
       this.updateDepartment);
 
     this.router.delete(`${this.path}/:id`,
-      authorize(['admin', 'superadmin']),
-      validationMiddleware(CreateDepartmentDto, APP_CONSTANTS.params),
+    authorize([Role.admin, Role.superAdmin]),
+      validationMiddleware(CreateUUIDDto, APP_CONSTANTS.params),
       this.deleteDepartment);
   }
 
